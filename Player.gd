@@ -16,11 +16,9 @@ func _physics_process(delta):
 			$Sprite.flip_h = true
 		else:
 			$Sprite.flip_h = false
-#
-#	if axis != 0:
-#		$AnimationPlayer.play("Run")
-#	else:
-#		$AnimationPlayer.play("Idle")
+
+	if Input.is_action_just_pressed("ui_select"):
+		motion.y = -500
 	
 	motion.x = axis * PLAYER_SPEED
 	motion.y += GRAVITY

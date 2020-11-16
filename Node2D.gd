@@ -2,7 +2,7 @@
 extends Node2D
 
 var last_modified_time := 0
-var led := {}
+var ldtk := {}
 var root_node
 
 
@@ -13,15 +13,14 @@ func _ready():
 	root_node = Node2D.new()
 	add_child(root_node)
 	
-	# get all data from led json file
-	led = get_led_data("res://myled.json")
-
+	# get all data from ldtk json file
+	ldtk = get_ldtk_data("res://myled.ldtk")
 	
 	# create all tilesets
-#	create_tilesets(led.defs.tilesets)
+	create_tilesets(ldtk.defs.tilesets)
 
 	# draw all layers of a level and save the level	
-	draw_all_layers(0, led)
+	draw_all_layers(0, ldtk)
 	
 
 
@@ -42,7 +41,7 @@ func draw_all_layers(level_id:int, led_data:Dictionary):
 	
 	var layers : Array = led_data.levels[level_id].layerInstances
 	layers.invert()
-	
+		
 	for layer in layers :
 		var tile_map = draw_layer(layer, led_data)
 		tile_map.owner = root_node
@@ -61,7 +60,7 @@ func draw_layer(layer:Dictionary, led_data:Dictionary):
 	
 	var current_layer = get_layer_by_id(layer.layerDefUid, led_data.defs.layers)	
 	
-	var tileset : TileSet = load("res://LED_tileset.tres")
+	var tileset : TileSet = load("res://LDTK_tileset.tres")
 	
 	var gridSize = layer.__gridSize
 	
@@ -94,16 +93,34 @@ func create_tilesets (tilesets:Array):
 	for t in tilesets:
 			
 		var texture = load("res://" + t.relPath)
-				
-		tile_set.create_tile(t.uid)	# create a tile with an id
-		tile_set.tile_set_tile_mode(t.uid, TileSet.ATLAS_TILE)	# tile mode
-		tile_set.tile_set_name(t.uid, t.identifier)	# tile name
-		tile_set.autotile_set_spacing(t.uid, t.spacing)
-		tile_set.tile_set_region( t.uid, Rect2(Vector2(0,0), Vector2(t.pxWid, t.pxHei)))	# tile size
-		tile_set.autotile_set_size(t.uid, Vector2(t.tileGridSize, t.tileGridSize))
-		tile_set.tile_set_texture(t.uid, texture)	# tile texture
+			
+		# is a collision tileset		
+		if t.identifier == "Collision":
+			tile_set.create_tile(t.uid)	# create a tile with an id
+			tile_set.tile_set_tile_mode(t.uid, TileSet.ATLAS_TILE)	# tile mode
+			tile_set.tile_set_name(t.uid, t.identifier)	# tile name
+			tile_set.autotile_set_spacing(t.uid, t.spacing)
+			tile_set.tile_set_region( t.uid, Rect2(Vector2(0,0), Vector2(t.pxWid, t.pxHei)))	# tile size
+			tile_set.autotile_set_size(t.uid, Vector2(t.tileGridSize, t.tileGridSize))
+			
+			var shape = ConvexPolygonShape2D.new()
+			shape.set_points([Vector2(0, 0), Vector2(t.pxWid, 0), Vector2(t.pxWid, t.pxHei), Vector2(0, t.pxHei)])
+			tile_set.tile_add_shape(t.uid, shape, Transform2D())
+			tile_set.tile_set_z_index(t.uid, -20)	# put on background
+			tile_set.tile_set_texture(t.uid, texture)	# tile texture	
+			
+		# not a collision tileset
+		else:
+			tile_set.create_tile(t.uid)	# create a tile with an id
+			tile_set.tile_set_tile_mode(t.uid, TileSet.ATLAS_TILE)	# tile mode
+			tile_set.tile_set_name(t.uid, t.identifier)	# tile name
+			tile_set.autotile_set_spacing(t.uid, t.spacing)
+			tile_set.tile_set_region( t.uid, Rect2(Vector2(0,0), Vector2(t.pxWid, t.pxHei)))	# tile size
+			tile_set.autotile_set_size(t.uid, Vector2(t.tileGridSize, t.tileGridSize))
+			tile_set.tile_set_texture(t.uid, texture)	# tile texture
 		
-	ResourceSaver.save("res://LED_tileset.tres", tile_set)
+		
+	ResourceSaver.save("res://LDTK_tileset.tres", tile_set)
 	
 	return tile_set
 	
@@ -111,7 +128,7 @@ func create_tilesets (tilesets:Array):
 
 
 # get led json data
-func get_led_data(file_name:String) -> Dictionary :
+func get_ldtk_data(file_name:String) -> Dictionary :
 	
 	var file = File.new()
 	file.open(file_name, file.READ)

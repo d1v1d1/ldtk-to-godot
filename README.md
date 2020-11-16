@@ -1,6 +1,6 @@
 # LED to GODOT 3.2
 
-- LED : https://deepnight.net/tools/led-2d-level-editor/
+- LDTK : https://deepnight.net/tools/led-2d-level-editor/
 - Godot : https://godotengine.org/
 
 Just a starting point...
@@ -14,3 +14,5 @@ Just a starting point...
 - [ ] Make UI
 - [ ] Make a standalone tool or a plugin ?
 
+
+If a tileset in LDtk is named "Collision", the tileset will be a collision tileset (so we can "paint" collision on the level).

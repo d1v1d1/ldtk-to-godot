@@ -95,7 +95,7 @@ func create_tilesets (tilesets:Array):
 		var texture = load("res://" + t.relPath)
 			
 		# is a collision tileset		
-		if t.identifier == "Collision":
+		if t.identifier == "_Collision":
 			tile_set.create_tile(t.uid)	# create a tile with an id
 			tile_set.tile_set_tile_mode(t.uid, TileSet.ATLAS_TILE)	# tile mode
 			tile_set.tile_set_name(t.uid, t.identifier)	# tile name
@@ -107,6 +107,21 @@ func create_tilesets (tilesets:Array):
 			shape.set_points([Vector2(0, 0), Vector2(t.pxWid, 0), Vector2(t.pxWid, t.pxHei), Vector2(0, t.pxHei)])
 			tile_set.tile_add_shape(t.uid, shape, Transform2D())
 			tile_set.tile_set_z_index(t.uid, -20)	# put on background
+			tile_set.tile_set_texture(t.uid, texture)	# tile texture	
+			
+		# is a 1 way collision tileset		
+		if t.identifier == "_Collision_1way":	
+			tile_set.create_tile(t.uid)	# create a tile with an id
+			tile_set.tile_set_tile_mode(t.uid, TileSet.ATLAS_TILE)	# tile mode
+			tile_set.tile_set_name(t.uid, t.identifier)	# tile name
+			tile_set.autotile_set_spacing(t.uid, t.spacing)
+			tile_set.tile_set_region( t.uid, Rect2(Vector2(0,0), Vector2(t.pxWid, t.pxHei)))	# tile size
+			tile_set.autotile_set_size(t.uid, Vector2(t.tileGridSize, t.tileGridSize))
+			
+			var shape = ConvexPolygonShape2D.new()
+			shape.set_points([Vector2(0, 0), Vector2(t.pxWid, 0), Vector2(t.pxWid, t.pxHei), Vector2(0, t.pxHei)])
+			tile_set.tile_add_shape(t.uid, shape, Transform2D(), true)
+			tile_set.tile_set_z_index(t.uid, -19)	# put on background
 			tile_set.tile_set_texture(t.uid, texture)	# tile texture	
 			
 		# not a collision tileset

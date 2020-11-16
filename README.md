@@ -15,4 +15,5 @@ Just a starting point...
 - [ ] Make a standalone tool or a plugin ?
 
 
-If a tileset in LDtk is named "Collision", the tileset will be a collision tileset (so we can "paint" collision on the level).
+- If a tileset in LDtk is named "_Collision", the tileset will be a collision tileset (so we can "paint" collision on the level).
+- If a tileset in LDtk is named "_Collision_1way", the tileset will be a collision tileset with 1 way collision.
